@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-const repoFallback = "PoE1Economy_Portfolio";
+const repoFallback = "PoE_Portfolio";
 
 export default defineConfig(({ mode }) => {
   const envBase = process.env.VITE_BASE_PATH;
