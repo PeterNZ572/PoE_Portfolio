@@ -1,0 +1,76 @@
+{
+  "date": "2026-04-01",
+  "league": "Standard",
+  "items": [
+    {
+      "id": "currency-chaos-orb",
+      "name": "Chaos Orb",
+      "category": "Currency",
+      "chaosValue": 1,
+      "divineValue": 0.0063,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png",
+      "date": "2026-04-01",
+      "league": "Standard"
+    },
+    {
+      "id": "currency-divine-orb",
+      "name": "Divine Orb",
+      "category": "Currency",
+      "chaosValue": 160,
+      "divineValue": 1,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyModValues.png",
+      "date": "2026-04-01",
+      "league": "Standard"
+    },
+    {
+      "id": "currency-mirror-of-kalandra",
+      "name": "Mirror of Kalandra",
+      "category": "Currency",
+      "chaosValue": 76000,
+      "divineValue": 475,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyVaal.png",
+      "date": "2026-04-01",
+      "league": "Standard"
+    },
+    {
+      "id": "uniqueweapon-starforge",
+      "name": "Starforge",
+      "category": "UniqueWeapon",
+      "chaosValue": 95,
+      "divineValue": 0.5938,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Weapons/TwoHandWeapons/TwoHandSwords/Starforge.png",
+      "date": "2026-04-01",
+      "league": "Standard"
+    },
+    {
+      "id": "uniquearmour-kaoms-heart",
+      "name": "Kaom's Heart",
+      "category": "UniqueArmour",
+      "chaosValue": 110,
+      "divineValue": 0.6875,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Armours/BodyArmours/KaomsHeart.png",
+      "date": "2026-04-01",
+      "league": "Standard"
+    },
+    {
+      "id": "divinationcard-the-apothecary",
+      "name": "The Apothecary",
+      "category": "DivinationCard",
+      "chaosValue": 2980,
+      "divineValue": 18.625,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Divination/InventoryIcon.png",
+      "date": "2026-04-01",
+      "league": "Standard"
+    },
+    {
+      "id": "skillgem-enlighten-support",
+      "name": "Enlighten Support",
+      "category": "SkillGem",
+      "chaosValue": 260,
+      "divineValue": 1.625,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Gems/Enlighten.png",
+      "date": "2026-04-01",
+      "league": "Standard"
+    }
+  ]
+}

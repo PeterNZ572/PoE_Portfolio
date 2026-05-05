@@ -1,0 +1,76 @@
+{
+  "date": "2026-04-01",
+  "league": "Hardcore Mirage",
+  "items": [
+    {
+      "id": "currency-chaos-orb",
+      "name": "Chaos Orb",
+      "category": "Currency",
+      "chaosValue": 1,
+      "divineValue": 0.0045,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png",
+      "date": "2026-04-01",
+      "league": "Hardcore Mirage"
+    },
+    {
+      "id": "currency-divine-orb",
+      "name": "Divine Orb",
+      "category": "Currency",
+      "chaosValue": 220,
+      "divineValue": 1,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyModValues.png",
+      "date": "2026-04-01",
+      "league": "Hardcore Mirage"
+    },
+    {
+      "id": "currency-mirror-of-kalandra",
+      "name": "Mirror of Kalandra",
+      "category": "Currency",
+      "chaosValue": 91000,
+      "divineValue": 413.6364,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyVaal.png",
+      "date": "2026-04-01",
+      "league": "Hardcore Mirage"
+    },
+    {
+      "id": "uniqueweapon-starforge",
+      "name": "Starforge",
+      "category": "UniqueWeapon",
+      "chaosValue": 165,
+      "divineValue": 0.75,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Weapons/TwoHandWeapons/TwoHandSwords/Starforge.png",
+      "date": "2026-04-01",
+      "league": "Hardcore Mirage"
+    },
+    {
+      "id": "uniquearmour-kaoms-heart",
+      "name": "Kaom's Heart",
+      "category": "UniqueArmour",
+      "chaosValue": 175,
+      "divineValue": 0.7955,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Armours/BodyArmours/KaomsHeart.png",
+      "date": "2026-04-01",
+      "league": "Hardcore Mirage"
+    },
+    {
+      "id": "divinationcard-the-apothecary",
+      "name": "The Apothecary",
+      "category": "DivinationCard",
+      "chaosValue": 3900,
+      "divineValue": 17.7273,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Divination/InventoryIcon.png",
+      "date": "2026-04-01",
+      "league": "Hardcore Mirage"
+    },
+    {
+      "id": "skillgem-enlighten-support",
+      "name": "Enlighten Support",
+      "category": "SkillGem",
+      "chaosValue": 355,
+      "divineValue": 1.6136,
+      "icon": "https://web.poecdn.com/image/Art/2DItems/Gems/Enlighten.png",
+      "date": "2026-04-01",
+      "league": "Hardcore Mirage"
+    }
+  ]
+}

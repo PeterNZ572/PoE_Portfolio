@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-05-05T09:34:52.590Z",
+  "defaultLeague": "Mirage",
+  "leagues": [
+    {
+      "key": "Mirage",
+      "label": "Mirage",
+      "slug": "mirage",
+      "indexPath": "/data/mirage/index.json"
+    },
+    {
+      "key": "Hardcore Mirage",
+      "label": "Hardcore Mirage",
+      "slug": "hardcore-mirage",
+      "indexPath": "/data/hardcore-mirage/index.json"
+    },
+    {
+      "key": "Standard",
+      "label": "Standard",
+      "slug": "standard",
+      "indexPath": "/data/standard/index.json"
+    },
+    {
+      "key": "Hardcore Standard",
+      "label": "Hardcore Standard",
+      "slug": "hardcore-standard",
+      "indexPath": "/data/hardcore-standard/index.json"
+    }
+  ]
+}
