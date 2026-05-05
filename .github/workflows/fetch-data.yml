@@ -2,11 +2,15 @@ name: Fetch poe.ninja snapshots
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: fetch-data
+  cancel-in-progress: false
 
 jobs:
   fetch:
