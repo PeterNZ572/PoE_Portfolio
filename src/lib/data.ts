@@ -34,6 +34,28 @@ function resolvePublicPath(path: string): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+function resolveAssetUrl(path?: string): string | undefined {
+  if (!path) {
+    return undefined;
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(path) || /^[a-z]+:/i.test(path)) {
+    return path;
+  }
+
+  return resolvePublicPath(path);
+}
+
+function normalizeSnapshot(snapshot: SnapshotFile): SnapshotFile {
+  return {
+    ...snapshot,
+    items: snapshot.items.map((item) => ({
+      ...item,
+      icon: resolveAssetUrl(item.icon),
+    })),
+  };
+}
+
 async function fetchJson<T>(path: string, options?: LoadOptions): Promise<T> {
   const url = resolvePublicPath(path);
   const requestUrl = options?.bypassCache ? `${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}` : url;
@@ -94,9 +116,11 @@ export async function loadLeagueSnapshots(league: LeagueKey, options?: LoadOptio
     const leagueIndex = await loadLeagueIndex(league, options);
     const dates = [...leagueIndex.dates].sort((left, right) => compareSnapshotKeys(left, right));
 
-    return Promise.all(
+    const snapshots = await Promise.all(
       dates.map((date) => fetchJson<SnapshotFile>(leagueIndex.snapshotPaths[date], options)),
     );
+
+    return snapshots.map(normalizeSnapshot);
   }
 
   const cached = snapshotsCache.get(league);
@@ -111,8 +135,9 @@ export async function loadLeagueSnapshots(league: LeagueKey, options?: LoadOptio
     dates.map((date) => fetchJson<SnapshotFile>(leagueIndex.snapshotPaths[date], options)),
   );
 
-  snapshotsCache.set(league, snapshots);
-  return snapshots;
+  const normalizedSnapshots = snapshots.map(normalizeSnapshot);
+  snapshotsCache.set(league, normalizedSnapshots);
+  return normalizedSnapshots;
 }
 
 export async function loadDashboardData(league: LeagueKey, options?: LoadOptions): Promise<DashboardData> {
