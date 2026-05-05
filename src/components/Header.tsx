@@ -41,6 +41,9 @@ export function Header({ league, onLeagueChange, latestDate }: HeaderProps) {
           Historical poe.ninja snapshots rendered as a GitHub Pages-friendly React dashboard with
           multi-league filtering, trend analysis, and static JSON data delivery.
         </p>
+        <p className="data-note">
+          ✨ Static dashboard powered by scheduled GitHub Actions data snapshots.
+        </p>
       </div>
 
       <div className="hero-controls">

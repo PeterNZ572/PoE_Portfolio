@@ -222,15 +222,18 @@ export default function App() {
 
         {loading ? (
           <section className="panel state-panel">
-            <h2>Loading dashboard</h2>
-            <p>Reading static snapshot manifests and league history from the local data directory.</p>
+            <h2>Initializing Dashboard</h2>
+            <p>Loading static snapshot manifests and historical league data from the repository.</p>
           </section>
         ) : null}
 
         {error ? (
           <section className="panel state-panel error-panel">
-            <h2>Unable to load league data</h2>
+            <h2>Data Load Error</h2>
             <p>{error}</p>
+            <p className="subtle-copy" style={{ marginTop: "0.5rem" }}>
+              Try refreshing the page or selecting a different league.
+            </p>
           </section>
         ) : null}
 

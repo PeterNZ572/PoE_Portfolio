@@ -62,8 +62,9 @@ export function ItemTable({
   if (items.length === 0) {
     return (
       <section className="panel table-panel empty-panel">
-        <h2>Latest Prices</h2>
-        <p>No items match the current filters.</p>
+        <h2>No Items Found</h2>
+        <p>No items match the current filters or search query.</p>
+        <p className="subtle-copy">Try clearing your search, adjusting category filters, or sorting by a different metric.</p>
       </section>
     );
   }

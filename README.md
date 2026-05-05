@@ -1,18 +1,42 @@
 # Path of Exile Economy Dashboard
 
+**[🔴 Live Dashboard](https://peternz572.github.io/PoE_Portfolio/)** | Built as a portfolio data analytics project
+
 Static React dashboard for exploring Path of Exile economy snapshots sourced from `poe.ninja`. The app is built to run on GitHub Pages with no backend server: data is fetched offline, normalized into static JSON snapshots, committed to the repo, and then rendered in the browser.
+
+## Portfolio Notes
+
+This project demonstrates a **complete static data analytics workflow**:
+
+- **API Ingestion**: Fetches economy data from third-party poe.ninja API endpoints
+- **Scheduled ETL**: GitHub Actions runs a Node script on a schedule to normalize and snapshot data
+- **Time-Series Storage**: Historical snapshots stored as static JSON files in version control
+- **React Dashboard**: Multi-page analytics dashboard with filtering, search, and trend analysis
+- **No Backend**: Entire application runs on GitHub Pages — no server infrastructure required
+- **Third-Party Data Source**: `poe.ninja` serves as the authoritative economy feed
+
+## Key Metrics
+
+This is not just a charting demo. It shows:
+- **External API integration** and payload normalization
+- **Data pipeline automation** (scheduled data collection)
+- **Static file deployment** (GitHub Pages friendly)
+- **Multi-view analytics** (latest prices, trends, movers)
+- **Time-series comparison** (7-day, 30-day performance)
+- **Responsive UX** (dark theme, league selection, favorites, search)
 
 ## Live Project Summary
 
 This project demonstrates:
 
-- API ingestion from a third-party economy source
-- scheduled ETL-style data collection with GitHub Actions
-- timestamped static snapshot storage under `public/data`
-- time-series analytics from historical snapshots
-- multi-league filtering
-- responsive React dashboard design
+- API ingestion from third-party economy sources
+- Scheduled ETL-style data collection with GitHub Actions
+- Timestamped static snapshot storage under `public/data`
+- Time-series analytics from historical snapshots
+- Multi-league filtering and search
+- Responsive React dashboard design
 - GitHub Pages deployment without server infrastructure
+- Professional empty/loading/error state handling
 
 ## Tech Stack
 
@@ -37,16 +61,16 @@ This project demonstrates:
 - Historical analytics from saved snapshots only
 - Responsive dark dashboard layout
 
-## Why This Is Portfolio-Relevant
+## Why This Works as a Portfolio Project
 
-This is not just a charting demo. It shows an end-to-end static data product:
+Instead of a mock dashboard, this is a **production-ready data product**:
 
-- ingesting external API data
-- normalizing inconsistent source payloads
-- storing time-series history as static artifacts
-- automating refreshes on a schedule
-- building a frontend that works entirely from generated files
-- deploying the result as a low-cost static site
+1. **Real External Data**: Connected to live poe.ninja endpoints, not hardcoded fixtures
+2. **Scheduled Automation**: GitHub Actions runs fetch jobs on a schedule to keep data fresh
+3. **Pipeline Architecture**: Separates data ingestion, normalization, and storage from rendering
+4. **Static Deployment**: Zero backend — entire site runs from generated JSON and React
+5. **Time-Series Analytics**: Demonstrates historical trend analysis and comparison logic
+6. **Professional UX**: Comprehensive filtering, search, favorites, and analytics across multiple views
 
 ## Project Structure
 

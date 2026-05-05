@@ -8,29 +8,37 @@ export function AboutProject() {
 
       <div className="about-grid">
         <article>
-          <h3>Pipeline</h3>
+          <h3>Data Pipeline</h3>
           <p>
-            A Node 22 fetch script calls third-party poe.ninja endpoints for all supported leagues
-            and categories, normalizes the payloads, and writes dated JSON snapshots into
-            <code>/public/data/&lt;league&gt;/snapshots</code>.
+            <code>poe.ninja API</code> → <code>GitHub Actions</code> → <code>JSON Snapshots</code> → <code>React</code>
+          </p>
+          <p className="subtle-copy">
+            Scheduled job normalizes API responses and commits timestamped snapshots to version control.
+            Frontend reads only static files from the repo.
           </p>
         </article>
 
         <article>
-          <h3>Storage Strategy</h3>
+          <h3>Fetching</h3>
           <p>
-            Each league has its own <code>index.json</code> manifest that lists available snapshot
-            dates. The React frontend only reads local static files, which keeps the deployment
-            GitHub Pages compatible and avoids frontend polling against a third-party service.
+            TypeScript script validates and normalizes poe.ninja payloads across all leagues and item categories,
+            handling inconsistent schemas and writing timestamped JSON to <code>/public/data/</code>.
+          </p>
+        </article>
+
+        <article>
+          <h3>Storage</h3>
+          <p>
+            Each league maintains an <code>index.json</code> manifest of available snapshots. Frontend loads data
+            on-demand—no third-party API calls, fully GitHub Pages compatible.
           </p>
         </article>
 
         <article>
           <h3>Analytics</h3>
           <p>
-            The dashboard computes latest prices, prior-snapshot comparisons, and 7-day or 30-day
-            percentage changes from the saved history. If history is missing, the UI explicitly says
-            that more data is needed.
+            Dashboard computes latest prices, historical comparisons, and 7-day / 30-day changes from snapshot history.
+            Missing history is explicitly indicated.
           </p>
         </article>
       </div>
