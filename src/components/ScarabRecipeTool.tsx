@@ -1,21 +1,10 @@
 import { useMemo, useState } from "react";
 import { SCARAB_REGEX_BY_NAME } from "../data/scarabRegex";
+import { formatChaos } from "../lib/format";
 import type { ItemWithTrends } from "../types";
 
 interface ScarabRecipeToolProps {
   items: ItemWithTrends[];
-}
-
-function formatChaos(value: number): string {
-  if (value >= 100) {
-    return value.toFixed(1);
-  }
-
-  if (value >= 10) {
-    return value.toFixed(2);
-  }
-
-  return value.toFixed(value >= 1 ? 2 : 3);
 }
 
 function buildRegex(items: ItemWithTrends[]): string {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { formatChaosLabel, formatWholeChaos } from "../lib/format";
 import type { ItemWithTrends } from "../types";
 
 interface ExchangeRateTableProps {
@@ -9,26 +10,6 @@ interface ExchangeRateTableProps {
   emptyTitle: string;
   emptyDescription: string;
   summaryLabel: string;
-}
-
-function formatChaos(value: number): string {
-  if (value >= 100) {
-    return value.toFixed(1);
-  }
-
-  if (value >= 10) {
-    return value.toFixed(2);
-  }
-
-  return value.toFixed(value >= 1 ? 2 : 3);
-}
-
-function formatChaosValue(value: number): string {
-  return `${formatChaos(value)} Chaos`;
-}
-
-function formatWholeChaos(value: number): string {
-  return Math.round(value).toString();
 }
 
 function formatChange(value: number | null): string {
@@ -128,7 +109,7 @@ export function ExchangeRateTable({
                     </div>
                   </div>
                 </td>
-                <td>{formatChaosValue(item.chaosValue)}</td>
+                <td>{formatChaosLabel(item.chaosValue)}</td>
                 <td className="exchange-rate">
                   {baselineItem ? (
                     <div
@@ -148,7 +129,7 @@ export function ExchangeRateTable({
                       </span>
                     </div>
                   ) : (
-                    formatChaosValue(item.chaosValue)
+                    formatChaosLabel(item.chaosValue)
                   )}
                 </td>
                 <td className={item.change7d === null ? undefined : item.change7d >= 0 ? "positive" : "negative"}>

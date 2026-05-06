@@ -1,4 +1,5 @@
 import { averagePrice, getBiggestMovers } from "../lib/trends";
+import { formatChaos } from "../lib/format";
 import type { ItemWithTrends } from "../types";
 
 interface StatCardsProps {
@@ -14,10 +15,6 @@ const snapshotDateFormatter = new Intl.DateTimeFormat(undefined, {
 const snapshotDayFormatter = new Intl.DateTimeFormat(undefined, {
   dateStyle: "medium",
 });
-
-function formatChaos(value: number): string {
-  return `${value.toFixed(value >= 10 ? 1 : 2)}c`;
-}
 
 function formatChange(value: number | null): string {
   if (value === null) {

@@ -8,6 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { formatChaos, formatDivine } from "../lib/format";
 import type { CompareMetric, ItemWithTrends } from "../types";
 
 interface CompareChartProps {
@@ -24,10 +25,10 @@ const tooltipDateFormatter = new Intl.DateTimeFormat(undefined, {
 
 function formatMetricValue(metric: CompareMetric, value: number): string {
   if (metric === "chaosValue") {
-    return `${value.toFixed(value >= 10 ? 1 : 2)}c`;
+    return formatChaos(value);
   }
 
-  return `${value.toFixed(value >= 1 ? 2 : 3)} div`;
+  return formatDivine(value);
 }
 
 function formatTooltipDate(value: string): string {
@@ -114,8 +115,10 @@ export function CompareChart({ items, metric, onMetricChange }: CompareChartProp
               stroke="#8ea4cc"
               tickLine={false}
               axisLine={false}
-              width={72}
-              tickFormatter={(value: number) => formatMetricValue(metric, value)}
+              width={84}
+              tickFormatter={(value: number) =>
+                metric === "chaosValue" ? formatChaos(value, true) : formatDivine(value, true)
+              }
             />
             <Tooltip
               labelFormatter={(label) => formatTooltipDate(String(label))}

@@ -8,6 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { formatChaos, formatDivine } from "../lib/format";
 import type { CompareMetric, ItemWithTrends } from "../types";
 
 interface TrendChartProps {
@@ -18,14 +19,6 @@ const tooltipDateFormatter = new Intl.DateTimeFormat(undefined, {
   dateStyle: "medium",
   timeStyle: "short",
 });
-
-function formatChaos(value: number): string {
-  return `${value.toFixed(value >= 10 ? 1 : 2)}c`;
-}
-
-function formatDivine(value: number): string {
-  return `${value.toFixed(value >= 1 ? 2 : 3)} div`;
-}
 
 function formatChange(value: number | null): string {
   if (value === null) {
@@ -74,7 +67,7 @@ export default function TrendChart({ item }: TrendChartProps) {
         ? formatDivine(previousPoint.divineValue)
         : "Unavailable";
   const yAxisFormatter = (value: number) =>
-    metric === "chaosValue" ? formatChaos(value) : formatDivine(value);
+    metric === "chaosValue" ? formatChaos(value, true) : formatDivine(value, true);
 
   return (
     <section className="panel chart-panel">
@@ -129,7 +122,7 @@ export default function TrendChart({ item }: TrendChartProps) {
               tickLine={false}
               axisLine={false}
               tickFormatter={yAxisFormatter}
-              width={64}
+              width={84}
             />
             <Tooltip
               labelFormatter={(label) => formatTooltipDate(String(label))}

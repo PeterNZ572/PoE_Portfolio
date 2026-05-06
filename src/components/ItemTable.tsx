@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { formatChaos, formatDivine } from "../lib/format";
 import type { ItemWithTrends } from "../types";
 
 interface ItemTableProps {
@@ -11,16 +12,12 @@ interface ItemTableProps {
   isLimited: boolean;
 }
 
-function formatChaos(value: number): string {
-  return `${value.toFixed(value >= 10 ? 1 : 2)}c`;
-}
-
-function formatDivine(value?: number): string {
+function formatDivineValue(value?: number): string {
   if (value === undefined) {
     return "N/A";
   }
 
-  return `${value.toFixed(value >= 1 ? 2 : 3)} div`;
+  return formatDivine(value);
 }
 
 function formatChange(value: number | null): string {
@@ -137,7 +134,7 @@ export function ItemTable({
                   </td>
                   <td>{item.category}</td>
                   <td>{formatChaos(item.chaosValue)}</td>
-                  <td>{formatDivine(item.divineValue)}</td>
+                  <td>{formatDivineValue(item.divineValue)}</td>
                   <td
                     className={
                       item.change7d === null ? undefined : item.change7d >= 0 ? "positive" : "negative"
