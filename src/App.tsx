@@ -1,8 +1,10 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { AboutProject } from "./components/AboutProject";
+import { ExchangeRateTable } from "./components/ExchangeRateTable";
 import { Filters } from "./components/Filters";
 import { Header } from "./components/Header";
 import { ItemTable } from "./components/ItemTable";
+import { ScarabRecipeTool } from "./components/ScarabRecipeTool";
 import { StatCards } from "./components/StatCards";
 import { loadDashboardData } from "./lib/data";
 import { getBiggestMovers, sortItems } from "./lib/trends";
@@ -14,6 +16,7 @@ import type {
   ItemWithTrends,
   LeagueKey,
   SortOption,
+  ViewTab,
 } from "./types";
 
 const DEFAULT_LEAGUE: LeagueKey = "Mirage";
@@ -40,6 +43,16 @@ function filterItems(
   });
 
   return sortItems(filtered, sortBy);
+}
+
+function prioritizeChaosBaseline(items: ItemWithTrends[]): ItemWithTrends[] {
+  const baseline = items.find((item) => item.id === "currency-chaos" || item.name === "Chaos Orb");
+
+  if (!baseline) {
+    return items;
+  }
+
+  return [baseline, ...items.filter((item) => item.id !== baseline.id)];
 }
 
 function loadFavoriteKeys(): string[] {
@@ -89,6 +102,7 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<ItemCategory | "All">("All");
   const [sortBy, setSortBy] = useState<SortOption>("price");
+  const [viewTab, setViewTab] = useState<ViewTab>("market");
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [favoriteKeys, setFavoriteKeys] = useState<string[]>([]);
   const [analysisTab, setAnalysisTab] = useState<AnalysisTab>("single");
@@ -143,6 +157,19 @@ export default function App() {
   const filteredItems = useMemo(() => {
     return filterItems(data?.items ?? [], search, category, sortBy);
   }, [category, data?.items, search, sortBy]);
+  const currencyItems = useMemo(() => {
+    const items = filterItems(data?.items ?? [], search, "Currency", sortBy);
+    return prioritizeChaosBaseline(items);
+  }, [data?.items, search, sortBy]);
+  const scarabItems = useMemo(() => {
+    return filterItems(data?.items ?? [], search, "Scarab", sortBy);
+  }, [data?.items, search, sortBy]);
+  const allScarabItems = useMemo(() => {
+    return filterItems(data?.items ?? [], "", "Scarab", sortBy);
+  }, [data?.items, sortBy]);
+  const chaosOrb = useMemo(() => {
+    return (data?.items ?? []).find((item) => item.id === "currency-chaos" || item.name === "Chaos Orb") ?? null;
+  }, [data?.items]);
 
   const favoriteKeySet = useMemo(() => new Set(favoriteKeys), [favoriteKeys]);
   const orderedItems = useMemo(
@@ -239,167 +266,237 @@ export default function App() {
 
         {!loading && !error && data ? (
           <>
-            <StatCards items={filteredItems} latestDate={data.latestDate} />
-
-            <section className="movers-grid">
-              <article className="panel movers-panel">
-                <div className="panel-header">
-                  <h2>Biggest Gainers</h2>
-                  <p>Ranked by 7-day percentage change for the current filter set.</p>
-                </div>
-                <div className="mover-list">
-                  {movers.gainers.length > 0 ? (
-                    movers.gainers.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        className="mover-card"
-                        onClick={() => setSelectedItemId(item.id)}
-                      >
-                        <span>{item.name}</span>
-                        <strong>{item.change7d !== null ? `+${item.change7d.toFixed(1)}%` : "N/A"}</strong>
-                      </button>
-                    ))
-                  ) : (
-                    <p className="subtle-copy">Not enough history for gainers yet.</p>
-                  )}
-                </div>
-              </article>
-
-              <article className="panel movers-panel">
-                <div className="panel-header">
-                  <h2>Biggest Losers</h2>
-                  <p>Weakest 7-day moves based on saved daily snapshot history.</p>
-                </div>
-                <div className="mover-list">
-                  {movers.losers.length > 0 ? (
-                    movers.losers.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        className="mover-card mover-card-loss"
-                        onClick={() => setSelectedItemId(item.id)}
-                      >
-                        <span>{item.name}</span>
-                        <strong>{item.change7d !== null ? `${item.change7d.toFixed(1)}%` : "N/A"}</strong>
-                      </button>
-                    ))
-                  ) : (
-                    <p className="subtle-copy">Not enough history for losers yet.</p>
-                  )}
-                </div>
-              </article>
+            <section className="analysis-tabs" aria-label="Dashboard views">
+              <button
+                type="button"
+                className={viewTab === "market" ? "analysis-tab is-active" : "analysis-tab"}
+                onClick={() => setViewTab("market")}
+              >
+                Market analysis
+              </button>
+              <button
+                type="button"
+                className={viewTab === "currency" ? "analysis-tab is-active" : "analysis-tab"}
+                onClick={() => setViewTab("currency")}
+              >
+                Currency rates
+              </button>
+              <button
+                type="button"
+                className={viewTab === "scarab" ? "analysis-tab is-active" : "analysis-tab"}
+                onClick={() => setViewTab("scarab")}
+              >
+                Scarab rates
+              </button>
             </section>
+
+            {viewTab === "market" ? (
+              <>
+                <StatCards items={filteredItems} latestDate={data.latestDate} />
+
+                <section className="movers-grid">
+                  <article className="panel movers-panel">
+                    <div className="panel-header">
+                      <h2>Biggest Gainers</h2>
+                      <p>Ranked by 7-day percentage change for the current filter set.</p>
+                    </div>
+                    <div className="mover-list">
+                      {movers.gainers.length > 0 ? (
+                        movers.gainers.map((item) => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            className="mover-card"
+                            onClick={() => setSelectedItemId(item.id)}
+                          >
+                            <span>{item.name}</span>
+                            <strong>{item.change7d !== null ? `+${item.change7d.toFixed(1)}%` : "N/A"}</strong>
+                          </button>
+                        ))
+                      ) : (
+                        <p className="subtle-copy">Not enough history for gainers yet.</p>
+                      )}
+                    </div>
+                  </article>
+
+                  <article className="panel movers-panel">
+                    <div className="panel-header">
+                      <h2>Biggest Losers</h2>
+                      <p>Weakest 7-day moves based on saved daily snapshot history.</p>
+                    </div>
+                    <div className="mover-list">
+                      {movers.losers.length > 0 ? (
+                        movers.losers.map((item) => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            className="mover-card mover-card-loss"
+                            onClick={() => setSelectedItemId(item.id)}
+                          >
+                            <span>{item.name}</span>
+                            <strong>{item.change7d !== null ? `${item.change7d.toFixed(1)}%` : "N/A"}</strong>
+                          </button>
+                        ))
+                      ) : (
+                        <p className="subtle-copy">Not enough history for losers yet.</p>
+                      )}
+                    </div>
+                  </article>
+                </section>
+              </>
+            ) : null}
 
             <Filters
               search={search}
               category={category}
               categories={data.categories}
               sortBy={sortBy}
+              title={
+                viewTab === "currency"
+                  ? "Explore Currency"
+                  : viewTab === "scarab"
+                    ? "Explore Scarabs"
+                    : "Explore Items"
+              }
+              description={
+                viewTab === "currency"
+                  ? "Search the current league's currency market and compare every orb directly against Chaos."
+                  : viewTab === "scarab"
+                    ? "Search the current league's scarab market and compare every scarab directly against Chaos."
+                  : "Filter the current league snapshot, then drill into time-series history for any item."
+              }
+              hideCategory={viewTab !== "market"}
               onSearchChange={setSearch}
               onCategoryChange={setCategory}
               onSortChange={setSortBy}
             />
 
-            <section className="analysis-tabs" aria-label="Analysis views">
-              <button
-                type="button"
-                className={analysisTab === "single" ? "analysis-tab is-active" : "analysis-tab"}
-                onClick={() => setAnalysisTab("single")}
-              >
-                Single item
-              </button>
-              <button
-                type="button"
-                className={analysisTab === "compare" ? "analysis-tab is-active" : "analysis-tab"}
-                onClick={() => setAnalysisTab("compare")}
-              >
-                Compare items
-              </button>
-            </section>
-
-            {analysisTab === "single" ? (
-              <section className="content-grid">
-                <ItemTable
-                  items={displayedItems}
-                  selectedItemId={selectedItemId}
-                  onSelectItem={(item) => setSelectedItemId(item.id)}
-                  onToggleFavorite={toggleFavorite}
-                  isFavorite={isFavorite}
-                  totalCount={orderedItems.length}
-                  isLimited={isListLimited}
-                />
-                <Suspense
-                  fallback={
-                    <section className="panel chart-panel state-panel">
-                      <h2>Loading chart</h2>
-                      <p>Preparing the trend visualization bundle.</p>
-                    </section>
-                  }
-                >
-                  <TrendChart item={selectedItem} />
-                </Suspense>
-              </section>
-            ) : (
-              <section className="compare-grid">
-                <section className="panel compare-picker-panel">
-                  <div className="panel-header">
-                    <h2>Compare Selection</h2>
-                    <p>Select up to 6 items from the current filtered set.</p>
-                  </div>
-
-                  <div className="selected-compare-items">
-                    {compareItems.length > 0 ? (
-                      compareItems.map((item) => (
-                        <button
-                          key={item.id}
-                          type="button"
-                          className="compare-chip is-selected"
-                          onClick={() => toggleCompareItem(item)}
-                        >
-                          <span>{item.name}</span>
-                          <strong>Remove</strong>
-                        </button>
-                      ))
-                    ) : (
-                      <p className="subtle-copy">No items selected yet.</p>
-                    )}
-                  </div>
-
-                  <div className="compare-candidate-list">
-                    {compareCandidates.map((item) => {
-                      const selected = compareItemIds.includes(item.id);
-
-                      return (
-                        <button
-                          key={item.id}
-                          type="button"
-                          className={selected ? "compare-chip is-selected" : "compare-chip"}
-                          onClick={() => toggleCompareItem(item)}
-                        >
-                          <span>{item.name}</span>
-                          <strong>{selected ? "Selected" : "Add"}</strong>
-                        </button>
-                      );
-                    })}
-                  </div>
+            {viewTab === "market" ? (
+              <>
+                <section className="analysis-tabs" aria-label="Analysis views">
+                  <button
+                    type="button"
+                    className={analysisTab === "single" ? "analysis-tab is-active" : "analysis-tab"}
+                    onClick={() => setAnalysisTab("single")}
+                  >
+                    Single item
+                  </button>
+                  <button
+                    type="button"
+                    className={analysisTab === "compare" ? "analysis-tab is-active" : "analysis-tab"}
+                    onClick={() => setAnalysisTab("compare")}
+                  >
+                    Compare items
+                  </button>
                 </section>
 
-                <Suspense
-                  fallback={
-                    <section className="panel compare-chart-panel state-panel">
-                      <h2>Loading comparison chart</h2>
-                      <p>Preparing the multi-item trend view.</p>
+                {analysisTab === "single" ? (
+                  <section className="content-grid">
+                    <ItemTable
+                      items={displayedItems}
+                      selectedItemId={selectedItemId}
+                      onSelectItem={(item) => setSelectedItemId(item.id)}
+                      onToggleFavorite={toggleFavorite}
+                      isFavorite={isFavorite}
+                      totalCount={orderedItems.length}
+                      isLimited={isListLimited}
+                    />
+                    <Suspense
+                      fallback={
+                        <section className="panel chart-panel state-panel">
+                          <h2>Loading chart</h2>
+                          <p>Preparing the trend visualization bundle.</p>
+                        </section>
+                      }
+                    >
+                      <TrendChart item={selectedItem} />
+                    </Suspense>
+                  </section>
+                ) : (
+                  <section className="compare-grid">
+                    <section className="panel compare-picker-panel">
+                      <div className="panel-header">
+                        <h2>Compare Selection</h2>
+                        <p>Select up to 6 items from the current filtered set.</p>
+                      </div>
+
+                      <div className="selected-compare-items">
+                        {compareItems.length > 0 ? (
+                          compareItems.map((item) => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              className="compare-chip is-selected"
+                              onClick={() => toggleCompareItem(item)}
+                            >
+                              <span>{item.name}</span>
+                              <strong>Remove</strong>
+                            </button>
+                          ))
+                        ) : (
+                          <p className="subtle-copy">No items selected yet.</p>
+                        )}
+                      </div>
+
+                      <div className="compare-candidate-list">
+                        {compareCandidates.map((item) => {
+                          const selected = compareItemIds.includes(item.id);
+
+                          return (
+                            <button
+                              key={item.id}
+                              type="button"
+                              className={selected ? "compare-chip is-selected" : "compare-chip"}
+                              onClick={() => toggleCompareItem(item)}
+                            >
+                              <span>{item.name}</span>
+                              <strong>{selected ? "Selected" : "Add"}</strong>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </section>
-                  }
-                >
-                  <CompareChart
-                    items={compareItems}
-                    metric={compareMetric}
-                    onMetricChange={setCompareMetric}
-                  />
-                </Suspense>
-              </section>
+
+                    <Suspense
+                      fallback={
+                        <section className="panel compare-chart-panel state-panel">
+                          <h2>Loading comparison chart</h2>
+                          <p>Preparing the multi-item trend view.</p>
+                        </section>
+                      }
+                    >
+                      <CompareChart
+                        items={compareItems}
+                        metric={compareMetric}
+                        onMetricChange={setCompareMetric}
+                      />
+                    </Suspense>
+                  </section>
+                )}
+              </>
+            ) : viewTab === "currency" ? (
+              <ExchangeRateTable
+                items={currencyItems}
+                baselineItem={chaosOrb}
+                tableTitle="Currency vs Chaos Orb"
+                itemHeading="Currency"
+                emptyTitle="No Currency Found"
+                emptyDescription="No currency rows match the current search or sort state."
+                summaryLabel="currency exchange rates"
+              />
+            ) : (
+              <>
+                <ScarabRecipeTool items={allScarabItems} />
+                <ExchangeRateTable
+                  items={scarabItems}
+                  baselineItem={chaosOrb}
+                  tableTitle="Scarabs vs Chaos Orb"
+                  itemHeading="Scarab"
+                  emptyTitle="No Scarabs Found"
+                  emptyDescription="No scarab rows match the current search or sort state."
+                  summaryLabel="scarab exchange rates"
+                />
+              </>
             )}
 
             <AboutProject />

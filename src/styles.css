@@ -257,6 +257,10 @@ h1 {
   gap: 1.1rem;
 }
 
+.filters-grid-compact {
+  grid-template-columns: 1.4fr minmax(0, 1fr);
+}
+
 .movers-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -456,6 +460,134 @@ tbody tr.is-selected {
   margin-top: 0.2rem;
   color: #8ea4cc;
   font-size: 0.84rem;
+}
+
+.exchange-rate {
+  color: #cbd5e1;
+  min-width: 280px;
+}
+
+.exchange-visual {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.exchange-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 36px;
+}
+
+.exchange-token strong {
+  font-size: 0.95rem;
+}
+
+.exchange-token-target strong {
+  min-width: 4.5rem;
+  text-align: right;
+}
+
+.exchange-arrow {
+  color: #8ea4cc;
+  font-weight: 700;
+}
+
+.exchange-token img,
+.exchange-icon-fallback {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  object-fit: cover;
+}
+
+.exchange-icon-fallback {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #c7d2e5;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.scarab-tool-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.scarab-tool-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) repeat(2, minmax(0, 0.55fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.scarab-tool-stat {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(7, 12, 22, 0.58);
+}
+
+.scarab-tool-stat span {
+  color: #8ea4cc;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scarab-tool-stat strong {
+  font-size: 1.25rem;
+  line-height: 1.1;
+}
+
+.regex-output {
+  min-height: 96px;
+  resize: vertical;
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(7, 12, 22, 0.8);
+  color: #f8fafc;
+}
+
+.scarab-tool-meta {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.scarab-tool-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.scarab-tool-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #d7deeb;
+  font-size: 0.88rem;
+}
+
+.scarab-tool-chip strong {
+  color: #7dd3fc;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .single-chart-head {
@@ -662,6 +794,10 @@ tbody tr.is-selected {
   }
 
   .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scarab-tool-grid {
     grid-template-columns: 1fr;
   }
 

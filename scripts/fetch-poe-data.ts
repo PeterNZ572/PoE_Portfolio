@@ -6,6 +6,7 @@ type LeagueKey = "Mirage" | "Hardcore Mirage" | "Standard" | "Hardcore Standard"
 type LeagueSlug = "mirage" | "hardcore-mirage" | "standard" | "hardcore-standard";
 type ItemCategory =
   | "Currency"
+  | "Scarab"
   | "UniqueWeapon"
   | "UniqueArmour"
   | "DivinationCard"
@@ -112,6 +113,11 @@ const ENDPOINTS: Array<{ category: ItemCategory; url: (league: string) => string
     category: "Currency",
     url: (league) =>
       `https://poe.ninja/poe1/api/economy/exchange/current/overview?league=${encodeURIComponent(league)}&type=Currency`,
+  },
+  {
+    category: "Scarab",
+    url: (league) =>
+      `https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=${encodeURIComponent(league)}&type=Scarab`,
   },
   {
     category: "UniqueWeapon",

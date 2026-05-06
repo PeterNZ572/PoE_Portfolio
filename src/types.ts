@@ -10,6 +10,7 @@ export type LeagueSlug = (typeof LEAGUE_OPTIONS)[number]["slug"];
 
 export type ItemCategory =
   | "Currency"
+  | "Scarab"
   | "UniqueWeapon"
   | "UniqueArmour"
   | "DivinationCard"
@@ -17,6 +18,7 @@ export type ItemCategory =
 
 export type SortOption = "name" | "price" | "change7d" | "change30d";
 export type AnalysisTab = "single" | "compare";
+export type ViewTab = "market" | "currency" | "scarab";
 export type CompareMetric = "chaosValue" | "divineValue";
 
 export interface NormalizedItem {
