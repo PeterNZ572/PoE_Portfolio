@@ -45,7 +45,7 @@ function buildCompareData(items: ItemWithTrends[], metric: CompareMetric): Array
   const rows = new Map<string, Record<string, number | string | null>>();
 
   for (const item of items) {
-    const points = item.trend.slice(-8);
+    const points = item.trend;
 
     for (const point of points) {
       const currentRow = rows.get(point.date) ?? { date: point.date };
@@ -55,8 +55,7 @@ function buildCompareData(items: ItemWithTrends[], metric: CompareMetric): Array
   }
 
   return [...rows.values()]
-    .sort((left, right) => String(left.date).localeCompare(String(right.date)))
-    .slice(-8);
+    .sort((left, right) => String(left.date).localeCompare(String(right.date)));
 }
 
 export function CompareChart({ items, metric, onMetricChange }: CompareChartProps) {
@@ -70,6 +69,7 @@ export function CompareChart({ items, metric, onMetricChange }: CompareChartProp
   }
 
   const chartData = buildCompareData(items, metric);
+  const showDots = chartData.length <= 24;
 
   return (
     <section className="panel compare-chart-panel">
@@ -144,7 +144,7 @@ export function CompareChart({ items, metric, onMetricChange }: CompareChartProp
                 name={item.name}
                 stroke={SERIES_COLORS[index % SERIES_COLORS.length]}
                 strokeWidth={3}
-                dot={{ r: 3, strokeWidth: 0 }}
+                dot={showDots ? { r: 3, strokeWidth: 0 } : false}
                 activeDot={{ r: 5 }}
                 connectNulls
               />

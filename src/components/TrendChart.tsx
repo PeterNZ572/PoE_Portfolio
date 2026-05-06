@@ -50,7 +50,8 @@ export default function TrendChart({ item }: TrendChartProps) {
     );
   }
 
-  const chartData = item.trend.slice(-8);
+  const chartData = item.trend;
+  const showDots = chartData.length <= 24;
   const previousPoint = chartData.length > 1 ? chartData[chartData.length - 2] : null;
   const latestLabel =
     metric === "chaosValue"
@@ -141,7 +142,7 @@ export default function TrendChart({ item }: TrendChartProps) {
               dataKey={metric}
               stroke="#7dd3fc"
               strokeWidth={3}
-              dot={{ r: 4, strokeWidth: 0, fill: "#f8fafc" }}
+              dot={showDots ? { r: 4, strokeWidth: 0, fill: "#f8fafc" } : false}
               activeDot={{ r: 6 }}
               connectNulls
             />
