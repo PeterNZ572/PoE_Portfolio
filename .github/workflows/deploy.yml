@@ -3,6 +3,9 @@ name: Deploy static site
 on:
   push:
     branches: ["main"]
+  workflow_run:
+    workflows: ["Fetch poe.ninja snapshots"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -16,11 +19,14 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || github.ref_name }}
 
       - name: Setup Pages
         id: pages
@@ -46,6 +52,7 @@ jobs:
           path: dist
 
   deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
