@@ -57,11 +57,22 @@ interface CurrencyOverviewResponse {
   };
 }
 
+interface ExchangeItemOverviewResponse {
+  items?: ExchangeItemMetadata[];
+  lines?: CurrencyLine[];
+}
+
 interface ItemOverviewResponse {
   lines?: ItemLine[];
 }
 
 interface CurrencyMetadata {
+  id?: string;
+  name?: string;
+  image?: string;
+}
+
+interface ExchangeItemMetadata {
   id?: string;
   name?: string;
   image?: string;
@@ -117,7 +128,7 @@ const ENDPOINTS: Array<{ category: ItemCategory; url: (league: string) => string
   {
     category: "Scarab",
     url: (league) =>
-      `https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=${encodeURIComponent(league)}&type=Scarab`,
+      `https://poe.ninja/poe1/api/economy/exchange/current/overview?league=${encodeURIComponent(league)}&type=Scarab`,
   },
   {
     category: "UniqueWeapon",
@@ -132,7 +143,7 @@ const ENDPOINTS: Array<{ category: ItemCategory; url: (league: string) => string
   {
     category: "DivinationCard",
     url: (league) =>
-      `https://poe.ninja/poe1/api/economy/stash/current/item/overview?league=${encodeURIComponent(league)}&type=DivinationCard`,
+      `https://poe.ninja/poe1/api/economy/exchange/current/overview?league=${encodeURIComponent(league)}&type=DivinationCard`,
   },
   {
     category: "SkillGem",
@@ -257,12 +268,51 @@ function isCurrencyLine(line: CurrencyLine): line is Required<Pick<CurrencyLine,
   return typeof line.id === "string" && typeof line.primaryValue === "number" && Number.isFinite(line.primaryValue);
 }
 
+function resolveRemoteImagePath(imagePath?: string): string | undefined {
+  if (!imagePath) {
+    return undefined;
+  }
+
+  try {
+    return new URL(imagePath, "https://poe.ninja").toString();
+  } catch {
+    return undefined;
+  }
+}
+
 function isItemLine(line: ItemLine): line is Required<Pick<ItemLine, "name" | "chaosValue">> & Pick<ItemLine, "icon"> {
   return (
     typeof line.name === "string" &&
     typeof line.chaosValue === "number" &&
     Number.isFinite(line.chaosValue)
   );
+}
+
+function normalizeExchangeItems(
+  response: ExchangeItemOverviewResponse,
+  category: Exclude<ItemCategory, "Currency" | "UniqueWeapon" | "UniqueArmour" | "SkillGem">,
+  league: LeagueKey,
+  date: string,
+): NormalizedItem[] {
+  const metadata = new Map<string, ExchangeItemMetadata>();
+
+  for (const item of response.items ?? []) {
+    if (typeof item.id === "string") {
+      metadata.set(item.id, item);
+    }
+  }
+
+  return (response.lines ?? [])
+    .filter(isCurrencyLine)
+    .map((line) => ({
+      id: `${slugify(category)}-${slugify(line.id)}`,
+      name: metadata.get(line.id)?.name ?? line.id,
+      category,
+      chaosValue: Number(line.primaryValue.toFixed(2)),
+      icon: resolveRemoteImagePath(metadata.get(line.id)?.image),
+      date,
+      league,
+    }));
 }
 
 async function normalizeCurrencyItems(
@@ -358,7 +408,9 @@ async function fetchLeagueSnapshot(league: {
     const payload =
       endpoint.category === "Currency"
         ? await fetchJson<CurrencyOverviewResponse>(url)
-        : await fetchJson<ItemOverviewResponse>(url);
+        : endpoint.category === "Scarab" || endpoint.category === "DivinationCard"
+          ? await fetchJson<ExchangeItemOverviewResponse>(url)
+          : await fetchJson<ItemOverviewResponse>(url);
 
     if (endpoint.category === "Currency") {
       normalized.push(
@@ -367,6 +419,15 @@ async function fetchLeagueSnapshot(league: {
           league.key,
           snapshotTimestamp,
         )),
+      );
+    } else if (endpoint.category === "Scarab" || endpoint.category === "DivinationCard") {
+      normalized.push(
+        ...normalizeExchangeItems(
+          payload as ExchangeItemOverviewResponse,
+          endpoint.category,
+          league.key,
+          snapshotTimestamp,
+        ),
       );
     } else {
       normalized.push(
