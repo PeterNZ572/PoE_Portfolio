@@ -48,36 +48,44 @@ function resolvePoeImageUrl(path?: string): string | undefined {
     return undefined;
   }
 
+  const isAbsoluteUrl = /^(?:[a-z]+:)?\/\//i.test(path) || /^[a-z]+:/i.test(path);
+
+  if (!isAbsoluteUrl && !path.startsWith("/gen/image/")) {
+    return undefined;
+  }
+
   try {
     const url = new URL(path, "https://poe.ninja");
 
-    if (url.pathname.startsWith("/gen/image/")) {
-      const encoded = url.pathname.split("/")[3];
+    if (url.hostname !== "poe.ninja" || !url.pathname.startsWith("/gen/image/")) {
+      return undefined;
+    }
 
-      if (encoded) {
-        try {
-          const parsed = JSON.parse(decodeBase64Url(encoded)) as unknown;
+    const encoded = url.pathname.split("/")[3];
 
-          if (Array.isArray(parsed)) {
-            const fileDescriptor = parsed.find(
-              (entry): entry is { f: string } =>
-                typeof entry === "object" &&
-                entry !== null &&
-                "f" in entry &&
-                typeof (entry as { f?: unknown }).f === "string",
-            );
+    if (encoded) {
+      try {
+        const parsed = JSON.parse(decodeBase64Url(encoded)) as unknown;
 
-            if (fileDescriptor) {
-              return `https://web.poecdn.com/image/Art/${fileDescriptor.f}.png`;
-            }
+        if (Array.isArray(parsed)) {
+          const fileDescriptor = parsed.find(
+            (entry): entry is { f: string } =>
+              typeof entry === "object" &&
+              entry !== null &&
+              "f" in entry &&
+              typeof (entry as { f?: unknown }).f === "string",
+          );
+
+          if (fileDescriptor) {
+            return `https://web.poecdn.com/image/Art/${fileDescriptor.f}.png`;
           }
-        } catch {
-          return `https://web.poecdn.com${url.pathname}${url.search}`;
         }
+      } catch {
+        return `https://web.poecdn.com${url.pathname}${url.search}`;
       }
     }
 
-    return url.toString();
+    return undefined;
   } catch {
     return undefined;
   }
