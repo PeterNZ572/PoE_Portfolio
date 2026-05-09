@@ -2,6 +2,7 @@ import { buildDashboardData } from "./trends";
 import type {
   DashboardData,
   LeagueIndexFile,
+  NormalizedItem,
   LeagueKey,
   RootDataIndex,
   SnapshotFile,
@@ -10,6 +11,8 @@ import type {
 const rootIndexCache: { current: RootDataIndex | null } = { current: null };
 const leagueIndexCache = new Map<LeagueKey, LeagueIndexFile>();
 const snapshotsCache = new Map<LeagueKey, SnapshotFile[]>();
+const DIVINATION_CARD_ICON =
+  "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvRGl2aW5hdGlvbi9JbnZlbnRvcnlJY29uIiwidyI6MSwiaCI6MSwic2NhbGUiOjF9XQ/f34bf8cbb5/InventoryIcon.png";
 
 interface LoadOptions {
   bypassCache?: boolean;
@@ -34,9 +37,60 @@ function resolvePublicPath(path: string): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+function decodeBase64Url(value: string): string {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  return atob(padded);
+}
+
+function resolvePoeImageUrl(path?: string): string | undefined {
+  if (!path) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(path, "https://poe.ninja");
+
+    if (url.pathname.startsWith("/gen/image/")) {
+      const encoded = url.pathname.split("/")[3];
+
+      if (encoded) {
+        try {
+          const parsed = JSON.parse(decodeBase64Url(encoded)) as unknown;
+
+          if (Array.isArray(parsed)) {
+            const fileDescriptor = parsed.find(
+              (entry): entry is { f: string } =>
+                typeof entry === "object" &&
+                entry !== null &&
+                "f" in entry &&
+                typeof (entry as { f?: unknown }).f === "string",
+            );
+
+            if (fileDescriptor) {
+              return `https://web.poecdn.com/image/Art/${fileDescriptor.f}.png`;
+            }
+          }
+        } catch {
+          return `https://web.poecdn.com${url.pathname}${url.search}`;
+        }
+      }
+    }
+
+    return url.toString();
+  } catch {
+    return undefined;
+  }
+}
+
 function resolveAssetUrl(path?: string): string | undefined {
   if (!path) {
     return undefined;
+  }
+
+  const remoteIcon = resolvePoeImageUrl(path);
+  if (remoteIcon) {
+    return remoteIcon;
   }
 
   if (/^(?:[a-z]+:)?\/\//i.test(path) || /^[a-z]+:/i.test(path)) {
@@ -46,13 +100,19 @@ function resolveAssetUrl(path?: string): string | undefined {
   return resolvePublicPath(path);
 }
 
+function normalizeSnapshotItem(item: NormalizedItem): NormalizedItem {
+  return {
+    ...item,
+    icon:
+      resolveAssetUrl(item.icon) ??
+      (item.category === "DivinationCard" ? DIVINATION_CARD_ICON : undefined),
+  };
+}
+
 function normalizeSnapshot(snapshot: SnapshotFile): SnapshotFile {
   return {
     ...snapshot,
-    items: snapshot.items.map((item) => ({
-      ...item,
-      icon: resolveAssetUrl(item.icon),
-    })),
+    items: snapshot.items.map(normalizeSnapshotItem),
   };
 }
 
