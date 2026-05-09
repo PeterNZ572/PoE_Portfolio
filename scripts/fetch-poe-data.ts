@@ -268,18 +268,6 @@ function isCurrencyLine(line: CurrencyLine): line is Required<Pick<CurrencyLine,
   return typeof line.id === "string" && typeof line.primaryValue === "number" && Number.isFinite(line.primaryValue);
 }
 
-function resolveRemoteImagePath(imagePath?: string): string | undefined {
-  if (!imagePath) {
-    return undefined;
-  }
-
-  try {
-    return new URL(imagePath, "https://poe.ninja").toString();
-  } catch {
-    return undefined;
-  }
-}
-
 function isItemLine(line: ItemLine): line is Required<Pick<ItemLine, "name" | "chaosValue">> & Pick<ItemLine, "icon"> {
   return (
     typeof line.name === "string" &&
@@ -309,7 +297,7 @@ function normalizeExchangeItems(
       name: metadata.get(line.id)?.name ?? line.id,
       category,
       chaosValue: Number(line.primaryValue.toFixed(2)),
-      icon: resolveRemoteImagePath(metadata.get(line.id)?.image),
+      icon: resolveCurrencyIconSource(metadata.get(line.id)?.image),
       date,
       league,
     }));
