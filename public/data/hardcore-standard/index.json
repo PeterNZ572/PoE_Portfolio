@@ -1,8 +1,8 @@
 {
   "league": "Hardcore Standard",
   "slug": "hardcore-standard",
-  "generatedAt": "2026-05-18T20:01:28.249Z",
-  "latest": "2026-05-18T20:01:07.189Z",
+  "generatedAt": "2026-05-19T04:33:46.185Z",
+  "latest": "2026-05-19T04:33:28.344Z",
   "dates": [
     "2026-04-01",
     "2026-04-28",
@@ -56,7 +56,8 @@
     "2026-05-18T04:41:13.167Z",
     "2026-05-18T10:41:16.832Z",
     "2026-05-18T15:56:16.308Z",
-    "2026-05-18T20:01:07.189Z"
+    "2026-05-18T20:01:07.189Z",
+    "2026-05-19T04:33:28.344Z"
   ],
   "snapshotPaths": {
     "2026-04-01": "/data/hardcore-standard/snapshots/2026-04-01.json",
@@ -111,6 +112,7 @@
     "2026-05-18T04:41:13.167Z": "/data/hardcore-standard/snapshots/2026-05-18T04-41-13-167Z.json",
     "2026-05-18T10:41:16.832Z": "/data/hardcore-standard/snapshots/2026-05-18T10-41-16-832Z.json",
     "2026-05-18T15:56:16.308Z": "/data/hardcore-standard/snapshots/2026-05-18T15-56-16-308Z.json",
-    "2026-05-18T20:01:07.189Z": "/data/hardcore-standard/snapshots/2026-05-18T20-01-07-189Z.json"
+    "2026-05-18T20:01:07.189Z": "/data/hardcore-standard/snapshots/2026-05-18T20-01-07-189Z.json",
+    "2026-05-19T04:33:28.344Z": "/data/hardcore-standard/snapshots/2026-05-19T04-33-28-344Z.json"
   }
 }
