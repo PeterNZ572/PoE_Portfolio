@@ -1,8 +1,8 @@
 {
   "league": "Hardcore Mirage",
   "slug": "hardcore-mirage",
-  "generatedAt": "2026-06-05T15:28:04.481Z",
-  "latest": "2026-06-05T15:27:55.106Z",
+  "generatedAt": "2026-06-05T20:12:28.254Z",
+  "latest": "2026-06-05T20:12:23.875Z",
   "dates": [
     "2026-04-01",
     "2026-04-28",
@@ -127,7 +127,8 @@
     "2026-06-04T20:24:27.451Z",
     "2026-06-05T04:46:27.290Z",
     "2026-06-05T10:16:07.539Z",
-    "2026-06-05T15:27:55.106Z"
+    "2026-06-05T15:27:55.106Z",
+    "2026-06-05T20:12:23.875Z"
   ],
   "snapshotPaths": {
     "2026-04-01": "/data/hardcore-mirage/snapshots/2026-04-01.json",
@@ -253,6 +254,7 @@
     "2026-06-04T20:24:27.451Z": "/data/hardcore-mirage/snapshots/2026-06-04T20-24-27-451Z.json",
     "2026-06-05T04:46:27.290Z": "/data/hardcore-mirage/snapshots/2026-06-05T04-46-27-290Z.json",
     "2026-06-05T10:16:07.539Z": "/data/hardcore-mirage/snapshots/2026-06-05T10-16-07-539Z.json",
-    "2026-06-05T15:27:55.106Z": "/data/hardcore-mirage/snapshots/2026-06-05T15-27-55-106Z.json"
+    "2026-06-05T15:27:55.106Z": "/data/hardcore-mirage/snapshots/2026-06-05T15-27-55-106Z.json",
+    "2026-06-05T20:12:23.875Z": "/data/hardcore-mirage/snapshots/2026-06-05T20-12-23-875Z.json"
   }
 }
